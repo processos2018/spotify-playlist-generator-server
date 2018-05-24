@@ -9,9 +9,6 @@ import six
 import os
 
 class DefaultResource(Resource):
-    def __init__(self, redirect_uri):
-        self.redirect_uri = redirect_uri
-
     def get(self):
         code = request.args.get('code')
 
