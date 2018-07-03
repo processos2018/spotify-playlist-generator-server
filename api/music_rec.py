@@ -30,7 +30,13 @@ class Music_Recommendation(Resource):
         size_list = len(data['tracks'])
         for i in range(0,size_list):
             self.list_id_recomendation.insert(0, data['tracks'][i]['id'])
-        return self.list_id_recomendation    
+        return self.list_id_recomendation
+
+    def get_id_music_top_user(self, data):
+        size_list = len(data['items'])
+        for i in range(0,size_list):
+            self.list_id_top_user.insert(0, data['items'][i]['id'])
+        return self.list_id_top_user    
 
     def get(self):
         if Token.query.count() > 0:
