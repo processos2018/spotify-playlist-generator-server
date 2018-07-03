@@ -36,7 +36,20 @@ class Music_Recommendation(Resource):
         size_list = len(data['items'])
         for i in range(0,size_list):
             self.list_id_top_user.insert(0, data['items'][i]['id'])
-        return self.list_id_top_user    
+        return self.list_id_top_user
+
+    def create_playlist(self):
+        self.id_playlist = self.sp.user_playlist_create(self.get_username(), name='Pop', public=True)
+        self.sp.user_playlist_add_tracks(self.get_username, self.id_playlist_recomendation['id'], self.get_music_recommendation_new_playlist(), position=None)
+
+    def get_music_recommendation(self):
+        self.set_audio_features()
+        return self.get_id_music_recommendation_new_playlist(self.sp.recommendations(seed_artists=None, seed_genres=['classical'], seed_tracks=None, limit=10, country=None, min_energy=self.calculate_audio_features['min_energy']))
+
+    def get_top_tracks_user(self):
+        list_top_tracks = self.sp.current_user_top_tracks(limit=2, offset=0, time_range='short_term')
+        list_id_top_tracks = self.get_id_music_top_user(list_top_tracks)
+        return list_id_top_tracks
 
     def get(self):
         if Token.query.count() > 0:
