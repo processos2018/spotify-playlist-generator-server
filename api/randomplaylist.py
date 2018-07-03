@@ -19,7 +19,6 @@ class RandomPlaylistRes(Resource):
             token = Token.query.get(1)
             token_aux = Token.query.get(0)
 
-            print('This is token: ' + token.token_value)
             print('This is token_aux ' + token_aux.token_value)
 
             spotipy_ = spotipy.Spotify(auth=token.token_value)
