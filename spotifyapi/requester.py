@@ -10,7 +10,7 @@ class Requester(object):
         self.authuri = 'https://accounts.spotify.com/authorize'
         self.tokenuri = 'https://accounts.spotify.com/api/token'
 
-    def getToken(self, user_id, client_id, secret, redirect_uri, scope=None):
+    def getToken(self, user_id, client_id, secret, redirect_uri, scope='user-library-read playlist-read-private user-top-read playlist-modify-public playlist-modify-private'):
         if not client_id:
             client_id = os.getenv('SPOTIPY_CLIENT_ID')
         if not secret:
