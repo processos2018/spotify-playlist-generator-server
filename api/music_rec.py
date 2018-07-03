@@ -47,6 +47,11 @@ def get_music_recommendation():
    #list_teste = sp.recommendations(seed_artists=None, seed_genres=['classical'], seed_tracks=None, limit=5, country=None, min_energy=calculate_audio_features['min_energy'], max_energy=calculate_audio_features['max_energy'], min_acousticness=calculate_audio_features['min_acousticness'], max_acousticness=calculate_audio_features['max_acousticness'], min_danceability=calculate_audio_features['min_danceability'], max_danceability=calculate_audio_features['max_danceability'], min_instrumentalness=calculate_audio_features['min_instrumentalness'], max_instrumentalness=calculate_audio_features['max_instrumentalness'], min_speechiness=calculate_audio_features['min_speechiness'], max_speechiness=calculate_audio_features['max_speechiness'], min_valence=calculate_audio_features['min_valence'], max_valence=calculate_audio_features['max_valence'])
     return get_id_music_recommendation_new_playlist(sp.recommendations(seed_artists=None, seed_genres=['classical'], seed_tracks=None, limit=10, country=None, min_energy=calculate_audio_features['min_energy']))
 
+def get_top_tracks_user(self):
+    list_top_tracks = self.sp.current_user_top_tracks(limit=2, offset=0, time_range='short_term')
+    list_id_top_tracks = self.get_id_music_top_user(list_top_tracks)
+    return list_id_top_tracks
+
 def set_audio_features(sp):
     audio_features = sp.audio_features(get_top_tracks_user())
     td = pd.DataFrame(audio_features)
