@@ -31,8 +31,8 @@ class DefaultResource(Resource):
             #token = db.session.query(Token).get(1)
             token = db.session.query(Token).order_by(Token.id.desc()).first()
             token.token_value = response_data.get('access_token')
-            print('This it token value:')
-            print(token.token_value)
+            print('This is access_token: ')
+            print(response_data.get('access_token'))
             db.session.commit()
 
         return {
