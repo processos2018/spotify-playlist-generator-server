@@ -26,6 +26,12 @@ class Music_Recommendation(Resource):
             playlist = self.sp.user_playlist(self.get_username(), self.id_playlist['id'])
             return playlist
 
+    def get_id_music_recommendation_new_playlist(self, data):
+        size_list = len(data['tracks'])
+        for i in range(0,size_list):
+            self.list_id_recomendation.insert(0, data['tracks'][i]['id'])
+        return self.list_id_recomendation    
+
     def get(self):
         if Token.query.count() > 0:
             token = Token.query.get(1)
