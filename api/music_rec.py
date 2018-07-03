@@ -48,8 +48,6 @@ class Music_Recommendation(Resource):
 
     def get_top_tracks_user(self):
         list_top_tracks = self.sp.current_user_top_tracks(limit=2, offset=0, time_range='short_term')
-        print('this is list_top_tracks: ')
-        print(list_top_tracks)
         list_id_top_tracks = self.get_id_music_top_user(list_top_tracks)
         return list_id_top_tracks
 
@@ -69,9 +67,6 @@ class Music_Recommendation(Resource):
         if Token.query.count() > 0:
             token = Token.query.get(1)
             self.sp = spotipy.Spotify(auth=token.token_value)
-            #return {
-            #    'response' : 'So far so good!'
-            #}
             self.set_audio_features()
             rec = self.get_music_recommendation()
             return {
