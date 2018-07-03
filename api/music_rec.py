@@ -56,7 +56,7 @@ class Music_Recommendation(Resource):
         audio_features = self.sp.audio_features(self.get_top_tracks_user())
         td = pd.DataFrame(audio_features)
         td.head()
-        
+
         features = ['energy', 'acousticness', 'danceability', 'instrumentalness', 'speechiness', 'valence']
 
         for x in features:
@@ -67,11 +67,11 @@ class Music_Recommendation(Resource):
         if Token.query.count() > 0:
             token = Token.query.get(1)
             self.sp = spotipy.Spotify(auth=token.token_value)
-            return {
-                'response' : 'So far so good!'
-            }
-            #self.set_audio_features()
-            #rec = self.get_music_recommendation()
             #return {
-            #    'recommendation_list' : rec
+            #    'response' : 'So far so good!'
             #}
+            self.set_audio_features()
+            rec = self.get_music_recommendation()
+            return {
+                'recommendation_list' : rec
+            }
