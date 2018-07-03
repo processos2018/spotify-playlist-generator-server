@@ -54,7 +54,6 @@ class Music_Recommendation(Resource):
     def set_audio_features(self):
 
         audio_features = self.sp.audio_features(self.get_top_tracks_user())
-        print(audio_features)
         td = pd.DataFrame(audio_features)
         td.head()
 
