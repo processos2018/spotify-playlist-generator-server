@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-from flask.ext.heroku import Heroku
+from flask_heroku import Heroku
 
 import os
 
