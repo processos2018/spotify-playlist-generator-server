@@ -20,10 +20,12 @@ class DefaultResource(Resource):
         response_data = response.json()
 
         if(Token.query.count()) == 0:
+            print('TOKEN COUNT WAS 0!!!')
             token = Token(token_value=response_data.get('access_token'))
             db.session.add(token)
             db.session.commit()
         else:
+            print('TOKEN COUNT WAS DIFFERENT THAN 0!!!')
             #token = Token.query.get(1)
             #token = Token.query.one()
             #token = db.session.query(Token).get(1)
