@@ -1,7 +1,12 @@
 from flask_restful import Resource
 from flask import request
 
+import os
+import json
+import spotipy
 import pandas as pd
+from pprint import pprint
+import spotipy.util as util
 
 from src import db
 from src import Token
