@@ -15,4 +15,4 @@ db = SQLAlchemy(app)
 
 class Token(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    token_value = db.Column(db.String(200), unique=True)
+    token_value = db.Column(db.String(400), unique=True)

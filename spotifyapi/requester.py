@@ -30,6 +30,8 @@ class Requester(object):
             exit()
 
         parameters = { 'client_id' : client_id, 'response_type' : 'code', 'redirect_uri' : redirect_uri }
+        if scope:
+            parameters['scope'] = scope
         urlparams = urllibparse.urlencode(parameters)
         import webbrowser
         webbrowser.open(self.authuri + '?' + urlparams)
