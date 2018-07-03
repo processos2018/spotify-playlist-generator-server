@@ -51,6 +51,18 @@ class Music_Recommendation(Resource):
         list_id_top_tracks = self.get_id_music_top_user(list_top_tracks)
         return list_id_top_tracks
 
+    def set_audio_features(self):
+
+        audio_features = self.sp.audio_features(self.get_top_tracks_user())
+        td = pd.DataFrame(audio_features)
+        td.head()
+        
+        features = ['energy', 'acousticness', 'danceability', 'instrumentalness', 'speechiness', 'valence']
+
+        for x in features:
+            self.calculate_audio_features['min_' + x] = str(td[x].mean() - td[x].var())
+            self.calculate_audio_features['max_' + x] = str(td[x].mean() + td[x].var())
+
     def get(self):
         if Token.query.count() > 0:
             token = Token.query.get(1)
