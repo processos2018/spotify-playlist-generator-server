@@ -31,9 +31,11 @@ def set_audio_features(self, sp):
 
 class Music_Recommendation(Resource):
     def get(self):
-        sp = spotipy.Spotify()
-        calculate_audio_features = set_audio_features(sp)
-        list_id_recomendation = get_id_music_recommendation_new_playlist(sp.recommendations(seed_artists=None, seed_genres=['classical'], seed_tracks=None, limit=10, country=None, min_energy=self.calculate_audio_features['min_energy']))
-        return {
-            'recommendation_list' : list_id_recomendation
-        }
+        if Token.query.count() > 0:
+            token = Token.query.get(1)
+            sp = spotipy.Spotify(auth=token.token_value)
+            calculate_audio_features = set_audio_features(sp)
+            list_id_recomendation = get_id_music_recommendation_new_playlist(sp.recommendations(seed_artists=None, seed_genres=['classical'], seed_tracks=None, limit=10, country=None, min_energy=self.calculate_audio_features['min_energy']))
+            return {
+                'recommendation_list' : list_id_recomendation
+            }
