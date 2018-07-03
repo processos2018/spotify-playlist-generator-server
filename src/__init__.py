@@ -10,8 +10,6 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
 heroku = Heroku(app)
 db = SQLAlchemy(app)
-with app.app_context():
-    db.create_all()
 
 class Token(db.Model):
     id = db.Column(db.Integer, primary_key=True)
