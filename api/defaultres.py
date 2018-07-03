@@ -17,6 +17,8 @@ class DefaultResource(Resource):
         parameters = { 'grant_type' : 'authorization_code', 'code' : code, 'redirect_uri' : os.getenv('SPOTIPY_REDIRECT_URI') }
 
         response = requests.post('https://accounts.spotify.com/api/token', data=parameters, headers=headers)
+        print('This is response:')
+        print(response)
         response_data = response.json()
 
         if(Token.query.count()) == 0:
