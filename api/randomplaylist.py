@@ -16,8 +16,8 @@ class RandomPlaylistRes(Resource):
         limit = 1
         type = "playlist"
         if Token.query.count() > 0:
-            print(Token.query.count())
-            token = Token.query.get(1)
+            #token = Token.query.get(1)
+            token = Token.query.one()
 
             spotipy_ = spotipy.Spotify(auth=token.token_value)
             results = spotipy_.search(q=search_query, type=type, limit=limit, offset=offset)
