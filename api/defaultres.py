@@ -20,12 +20,12 @@ class DefaultResource(Resource):
         response_data = response.json()
 
         if(Token.query.count()) == 0:
-            token = Token(token_value=response_data['access_token'])
+            token = Token(token_value=response_data.get('access_token'))
             db.session.add(token)
             db.session.commit()
         else:
             token = Token.query.get(1)
-            token.token_value = response_data['access_token']
+            token.token_value = response_data.get('access_token')
             db.session.commit()
 
         return {
