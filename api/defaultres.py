@@ -26,7 +26,8 @@ class DefaultResource(Resource):
         else:
             #token = Token.query.get(1)
             #token = Token.query.one()
-            token = db.session.query(Token).get(1)
+            #token = db.session.query(Token).get(1)
+            token = db.session.query(Token).order_by(Token.id.desc()).first()
             token.token_value = response_data.get('access_token')
             db.session.commit()
 
