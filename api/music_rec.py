@@ -22,7 +22,7 @@ def get_playlist_json():
     if id_playlist == '':
         print("Playlist Vazia")
     else:
-        playlist = sp.user_playlist(self.sp.current_user()['id'], id_playlist['id'])
+        playlist = sp.user_playlist(sp.current_user()['id'], id_playlist['id'])
         return playlist
 
 def get_id_music_recommendation_new_playlist(data):
@@ -38,7 +38,7 @@ def get_id_music_top_user(data):
     return list_id_top_user
 
 def create_playlist():
-    id_playlist = sp.user_playlist_create(self.sp.current_user()['id'], name='Pop', public=True)
+    id_playlist = sp.user_playlist_create(sp.current_user()['id'], name='Pop', public=True)
     #print (json.dumps(id_playlist, indent = 4, sort_keys=True))
     sp.user_playlist_add_tracks(get_username, id_playlist_recomendation['id'], get_music_recommendation_new_playlist(), position=None)
 
@@ -48,8 +48,8 @@ def get_music_recommendation():
     return get_id_music_recommendation_new_playlist(sp.recommendations(seed_artists=None, seed_genres=['classical'], seed_tracks=None, limit=10, country=None, min_energy=calculate_audio_features['min_energy']))
 
 def get_top_tracks_user():
-    list_top_tracks = self.sp.current_user_top_tracks(limit=2, offset=0, time_range='short_term')
-    list_id_top_tracks = self.get_id_music_top_user(list_top_tracks)
+    list_top_tracks = sp.current_user_top_tracks(limit=2, offset=0, time_range='short_term')
+    list_id_top_tracks = get_id_music_top_user(list_top_tracks)
     return list_id_top_tracks
 
 def set_audio_features(sp):
