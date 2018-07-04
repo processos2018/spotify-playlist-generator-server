@@ -14,7 +14,8 @@ from src import Token
 class Music_Recommendation(Resource):
     id_playlist=''
     list_id_recomendation = []
-    list_id_top_user = []
+    list_id_tracks_top_user = []
+    list_id_artists_top_user = []
     list_teste = ''
     calculate_audio_features = {}
     sp = None
@@ -35,28 +36,44 @@ class Music_Recommendation(Resource):
     def get_id_music_top_user(self, data):
         size_list = len(data['items'])
         for i in range(0,size_list):
-            self.list_id_top_user.insert(0, data['items'][i]['id'])
-        return self.list_id_top_user
+            self.list_id_tracks_top_user.insert(0, data['items'][i]['id'])
+        return self.list_id_tracks_top_user
 
-    def create_playlist(self):
-        self.id_playlist = self.sp.user_playlist_create(self.get_username(), name='Pop', public=True)
-        self.sp.user_playlist_add_tracks(self.get_username, self.id_playlist_recomendation['id'], self.get_music_recommendation_new_playlist(), position=None)
+    def get_id_artist_top_user(self, data):
+        size_list = len(data['items'])
+        for i in range(0,size_list):
+            self.list_id_artists_top_user(0, data['items'][i]['id'])
+        return self.list_id_artists_top_user
 
-    def get_music_recommendation(self):
+    def get_playlist_info(self):
+        return self.sp.user_playlist(self.get_username, self.id_playlist['id'])
+
+    def create_playlist(self, genre = None):
+        self.id_playlist = self.sp.user_playlist_create(self.get_username(), name='Fábrica de Playlist', public=True)
+        self.sp.user_playlist_add_tracks(self.get_username, self.id_playlist['id'], self.get_music_recommendation(genre), position=None)
+
+    def get_music_recommendation(self, genre = None):
         self.set_audio_features()
-        return self.get_id_music_recommendation_new_playlist(self.sp.recommendations(seed_artists=None, seed_genres=['classical'], seed_tracks=None, limit=10, country=None, min_energy=self.calculate_audio_features['min_energy']))
+        if genre == None:
+            return self.get_id_music_recommendation_new_playlist(self.sp.recommendations(seed_artists=self.get_top_artists_user()[0:1], seed_genres=None, seed_tracks=self.get_top_tracks_user()[0:1], limit=30, country=None))
+        else:
+            return self.get_id_music_recommendation_new_playlist(self.sp.recommendations(seed_artists=self.get_top_artists_user()[0:1], seed_genres=[genre], seed_tracks=self.get_top_tracks_user()[0:1], limit=30, country=None))
 
     def get_top_tracks_user(self):
         list_top_tracks = self.sp.current_user_top_tracks(limit=2, offset=0, time_range='short_term')
         list_id_top_tracks = self.get_id_music_top_user(list_top_tracks)
         return list_id_top_tracks
 
+    def get_top_artists_user(self):
+        list_top_artists = self.sp.current_user_top_artists(limit=2, offset=0, time_range='short_term')
+        list_id_top_artists = self.get_id_music_top_user(list_top_artists)
+        return list_id_top_artists
+
     def set_audio_features(self):
 
         audio_features = self.sp.audio_features(self.get_top_tracks_user())
         td = pd.DataFrame(audio_features)
         td.head()
-
         features = ['energy', 'acousticness', 'danceability', 'instrumentalness', 'speechiness', 'valence']
 
         for x in features:
@@ -67,8 +84,8 @@ class Music_Recommendation(Resource):
         if Token.query.count() > 0:
             token = Token.query.get(1)
             self.sp = spotipy.Spotify(auth=token.token_value)
-            self.set_audio_features()
-            rec = self.get_music_recommendation()
+            self.create_playlist(genre='classical')
             return {
-                'recommendation_list' : rec
+                'status' : 'Playlist criada.',
+                'playlist_id' : self.id_playlist
             }
