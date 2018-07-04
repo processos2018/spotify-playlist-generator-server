@@ -90,6 +90,6 @@ class Music_Recommendation(Resource):
             self.create_playlist(genre='classical')
             return {
                 'status' : 'success',
-                'playlist_link' : self.id_playlist['external_urls']['spotify']
+                'playlist_link' : self.id_playlist['external_urls']['spotify'],
                 'playlist' : self.id_playlist
             }
