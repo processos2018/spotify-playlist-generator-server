@@ -86,10 +86,17 @@ class Music_Recommendation(Resource):
     def get(self):
         if Token.query.count() > 0:
             token = Token.query.get(1)
+
+            genre = request.args.get('genre')
             self.sp = spotipy.Spotify(auth=token.token_value)
-            self.create_playlist(genre='classical')
+            self.create_playlist(genre=genre)
             return {
                 'status' : 'success',
                 'playlist_link' : self.id_playlist['external_urls']['spotify'],
                 'playlist' : self.get_playlist_info()
+            }
+        else:
+            return {
+                'status' : 'failed',
+                'reason' : 'Authentication failed (user token).'
             }
