@@ -85,7 +85,7 @@ class Music_Recommendation(Resource):
             self.calculate_audio_features['max_' + x] = str(td[x].mean() + td[x].var())
 
     def get(self):
-        token_get = requests.args.get('token')
+        token_get = request.args.get('token')
 
         if token_get is None:
             if Token.query.count() > 0:
@@ -100,7 +100,7 @@ class Music_Recommendation(Resource):
             self.sp = spotipy.Spotify(auth=token_get)
 
         genre = request.args.get('genre')
-        name = requests.args.get('name')
+        name = request.args.get('name')
         self.features = request.args.getlist('features')
 
         self.create_playlist(genre=genre, name=name)
