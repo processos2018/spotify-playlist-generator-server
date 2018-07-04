@@ -20,6 +20,9 @@ class Music_Recommendation(Resource):
     calculate_audio_features = {}
     sp = None
 
+    def get_username(self):
+        return self.sp.current_user()['id']
+
     def get_playlist_json(self):
         if self.id_playlist == '':
             print("Playlist Vazia")
@@ -46,11 +49,11 @@ class Music_Recommendation(Resource):
         return self.list_id_artists_top_user
 
     def get_playlist_info(self):
-        return self.sp.user_playlist(self.get_username, self.id_playlist['id'])
+        return self.sp.user_playlist(self.get_username(), self.id_playlist['id'])
 
     def create_playlist(self, genre = None):
-        self.id_playlist = self.sp.user_playlist_create(self.sp.current_user()['id'], name='Fabrica de Playlist', public=True)
-        self.sp.user_playlist_add_tracks(self.get_username, self.id_playlist['id'], self.get_music_recommendation(genre), position=None)
+        self.id_playlist = self.sp.user_playlist_create(self.getUsername(), name='Fabrica de Playlist', public=True)
+        self.sp.user_playlist_add_tracks(self.get_username(), self.id_playlist['id'], self.get_music_recommendation(genre), position=None)
 
     def get_music_recommendation(self, genre = None):
         self.set_audio_features()
