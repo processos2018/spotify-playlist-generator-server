@@ -80,7 +80,7 @@ class Music_Recommendation(Resource):
         td.head()
         #features = ['energy', 'acousticness', 'danceability', 'instrumentalness', 'speechiness', 'valence']
 
-        for x in features:
+        for x in self.features:
             self.calculate_audio_features['min_' + x] = str(td[x].mean() - td[x].var())
             self.calculate_audio_features['max_' + x] = str(td[x].mean() + td[x].var())
 
