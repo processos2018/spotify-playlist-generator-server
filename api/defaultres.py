@@ -29,5 +29,5 @@ class DefaultResource(Resource):
             db.session.commit()
 
         return {
-            'response' : 'success'
+            'status' : 'success'
         }
