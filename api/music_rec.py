@@ -52,7 +52,7 @@ class Music_Recommendation(Resource):
         return self.sp.user_playlist(self.get_username(), self.id_playlist['id'])
 
     def create_playlist(self, genre = None):
-        self.id_playlist = self.sp.user_playlist_create(self.getUsername(), name='Fabrica de Playlist', public=True)
+        self.id_playlist = self.sp.user_playlist_create(self.get_username(), name='Fabrica de Playlist', public=True)
         self.sp.user_playlist_add_tracks(self.get_username(), self.id_playlist['id'], self.get_music_recommendation(genre), position=None)
 
     def get_music_recommendation(self, genre = None):
