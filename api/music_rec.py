@@ -18,6 +18,7 @@ class Music_Recommendation(Resource):
     list_id_artists_top_user = []
     list_teste = ''
     calculate_audio_features = {}
+    features = []
     sp = None
 
     def get_username(self):
@@ -51,8 +52,8 @@ class Music_Recommendation(Resource):
     def get_playlist_info(self):
         return self.sp.user_playlist(self.get_username(), self.id_playlist['id'])
 
-    def create_playlist(self, genre = None):
-        self.id_playlist = self.sp.user_playlist_create(self.get_username(), name='Fabrica de Playlist', public=True)
+    def create_playlist(self, genre = None, name='Fabrica de Playlists'):
+        self.id_playlist = self.sp.user_playlist_create(self.get_username(), name=name, public=True)
         self.sp.user_playlist_add_tracks(self.get_username(), self.id_playlist['id'], self.get_music_recommendation(genre), position=None)
 
     def get_music_recommendation(self, genre = None):
@@ -77,26 +78,34 @@ class Music_Recommendation(Resource):
         audio_features = self.sp.audio_features(self.get_top_tracks_user())
         td = pd.DataFrame(audio_features)
         td.head()
-        features = ['energy', 'acousticness', 'danceability', 'instrumentalness', 'speechiness', 'valence']
+        #features = ['energy', 'acousticness', 'danceability', 'instrumentalness', 'speechiness', 'valence']
 
         for x in features:
             self.calculate_audio_features['min_' + x] = str(td[x].mean() - td[x].var())
             self.calculate_audio_features['max_' + x] = str(td[x].mean() + td[x].var())
 
     def get(self):
-        if Token.query.count() > 0:
-            token = Token.query.get(1)
+        token_get = requests.args.get('token')
 
-            genre = request.args.get('genre')
-            self.sp = spotipy.Spotify(auth=token.token_value)
-            self.create_playlist(genre=genre)
-            return {
-                'status' : 'success',
-                'playlist_link' : self.id_playlist['external_urls']['spotify'],
-                'playlist' : self.get_playlist_info()
-            }
+        if token_get is None:
+            if Token.query.count() > 0:
+                token = Token.query.get(1)
+                self.sp = spotipy.Spotify(auth=token.token_value)
+            else:
+                return {
+                    'status' : 'failed',
+                    'reason' : 'Authentication failed (user token).'
+                }
         else:
-            return {
-                'status' : 'failed',
-                'reason' : 'Authentication failed (user token).'
-            }
+            self.sp = spotipy.Spotify(auth=token_get)
+
+        genre = request.args.get('genre')
+        name = requests.args.get('name')
+        self.features = request.args.getlist('features')
+
+        self.create_playlist(genre=genre, name=name)
+        return {
+            'status' : 'success',
+            'playlist_link' : self.id_playlist['external_urls']['spotify'],
+            'playlist' : self.get_playlist_info()
+        }
