@@ -89,6 +89,6 @@ class Music_Recommendation(Resource):
             self.sp = spotipy.Spotify(auth=token.token_value)
             self.create_playlist(genre='classical')
             return {
-                'status' : 'Playlist criada.',
-                'playlist_id' : self.id_playlist
+                'status' : 'success',
+                'playlist_link' : self.id_playlist['external_urls']['spotify']
             }
