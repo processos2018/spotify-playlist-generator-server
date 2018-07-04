@@ -91,5 +91,5 @@ class Music_Recommendation(Resource):
             return {
                 'status' : 'success',
                 'playlist_link' : self.id_playlist['external_urls']['spotify'],
-                'playlist' : self.id_playlist
+                'playlist' : self.get_playlist_info()
             }
