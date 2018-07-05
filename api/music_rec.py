@@ -52,16 +52,17 @@ class Music_Recommendation(Resource):
     def get_playlist_info(self):
         return self.sp.user_playlist(self.get_username(), self.id_playlist['id'])
 
-    def create_playlist(self, genre = None, name='Fabrica de Playlists'):
+    def create_playlist(self, name='Fabrica de Playlists'):
         self.id_playlist = self.sp.user_playlist_create(self.get_username(), name=name, public=True)
-        self.sp.user_playlist_add_tracks(self.get_username(), self.id_playlist['id'], self.get_music_recommendation(genre), position=None)
+        self.sp.user_playlist_add_tracks(self.get_username(), self.id_playlist['id'], self.get_music_recommendation(), position=None)
 
-    def get_music_recommendation(self, genre = None):
+    def get_music_recommendation(self):
         self.set_audio_features()
-        if genre == None:
-            return self.get_id_music_recommendation_new_playlist(self.sp.recommendations(seed_artists=self.get_top_artists_user()[0:1], seed_genres=None, seed_tracks=self.get_top_tracks_user()[0:1], limit=30, country=None))
-        else:
-            return self.get_id_music_recommendation_new_playlist(self.sp.recommendations(seed_artists=self.get_top_artists_user()[0:1], seed_genres=[genre], seed_tracks=self.get_top_tracks_user()[0:1], limit=30, country=None))
+        #if genre == None:
+        #    return self.get_id_music_recommendation_new_playlist(self.sp.recommendations(seed_artists=self.get_top_artists_user()[0:1], seed_genres=None, seed_tracks=self.get_top_tracks_user()[0:1], limit=30, country=None))
+        #else:
+        #    return self.get_id_music_recommendation_new_playlist(self.sp.recommendations(seed_artists=self.get_top_artists_user()[0:1], seed_genres=[genre], seed_tracks=self.get_top_tracks_user()[0:1], limit=30, country=None))
+        return self.get_id_music_recommendation_new_playlist(self.sp.recommendations(seed_artists=self.artist, seed_genres=self.genre, seed_tracks=self.track, limit=30, country=None))
 
     def get_top_tracks_user(self):
         list_top_tracks = self.sp.current_user_top_tracks(limit=2, offset=0, time_range='short_term')
@@ -99,11 +100,16 @@ class Music_Recommendation(Resource):
         else:
             self.sp = spotipy.Spotify(auth=token_get)
 
-        genre = request.args.get('genre')
         name = request.args.get('name')
+
+        self.artist = request.args.getlist('artist')
+        self.track = request.args.getlist('track')
+        self.genre = request.args.getlist('genre')
+
         self.features = request.args.getlist('features')
 
-        self.create_playlist(genre=genre, name=name)
+        self.create_playlist(name=name)
+        
         return {
             'status' : 'success',
             'playlist_link' : self.id_playlist['external_urls']['spotify'],
