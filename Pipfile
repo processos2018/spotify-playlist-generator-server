@@ -32,7 +32,7 @@ sqlalchemy = "==1.2.8"
 "urllib3" = "==1.22"
 virtualenv = "==16.0.0"
 virtualenv-clone = "==0.3.0"
-werkzeug = "==0.14.1"
+werkzeug = "==0.15.3"
 
 [requires]
 python_version = "2.7"
